@@ -1,13 +1,14 @@
 import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AouthProvider";
 
 
 const Register = () => {
-    const {creatUser} = useContext(AuthContext)
+    const { creatUser, updateUserProfile, setUser } = useContext(AuthContext)
+    const navigate = useNavigate()
 
-    const handleRegister = (e)=> {
+    const handleRegister = async(e) => {
         e.preventDefault();
         const form = e.target
         const name = form.name.value;
@@ -15,10 +16,21 @@ const Register = () => {
         const photo = form.photo.value;
         const password = form.password.value;
         console.log(name, email, photo, password);
-        creatUser(email, password)
-        .then(result => {
-            console.log(result.user);
-        })
+        try {
+            const result = await creatUser(email, password)
+            await updateUserProfile(name, photo)
+            setUser({ ...result.user, photoURL: photo, displayName: name })
+            // Swal.fire({
+            //     title: 'Success!',
+            //     text: 'Registration successfully',
+            //     icon: 'success',
+            //     confirmButtonText: 'Ok'
+            // })
+            navigate('/')
+        } catch (error) {
+            // toast.error(error?.message)
+            console.log(error.message)
+        }
     }
     return (
         <div>

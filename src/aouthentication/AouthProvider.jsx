@@ -4,6 +4,7 @@ import auth from "../firebase/firebase.init";
 
 
 export const AuthContext = createContext(null)
+const googleProvider = new GoogleAuthProvider()
 
 const AouthProvider = ({children}) => {
     const [user, setUser] = useState(null)
@@ -17,6 +18,18 @@ const AouthProvider = ({children}) => {
       const signIn = (email, password) => {
         setLoading(true)
         return signInWithEmailAndPassword(auth, email, password)
+      }
+
+      const signInWithGoogle = () => {
+        setLoading(true)
+        return signInWithPopup(auth, googleProvider)
+      }
+
+      const updateUserProfile = (name, photo) => {
+        return updateProfile(auth.currentUser, {
+          displayName: name,
+          photoURL: photo,
+        })
       }
 
       const logOut = async () => {
@@ -37,7 +50,7 @@ const AouthProvider = ({children}) => {
       }, [])
 
     const authInfo = {
-        user, loading, creatUser, signIn, logOut,
+        user, loading, creatUser, signIn, logOut, signInWithGoogle, updateUserProfile, setUser,
     }
 
     return (

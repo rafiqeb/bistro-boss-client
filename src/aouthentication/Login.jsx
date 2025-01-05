@@ -1,44 +1,55 @@
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AouthProvider";
 
 
 const Login = () => {
-    const {signIn} = useContext(AuthContext)
-    const captchaRef = useRef(null)
+    const { signIn, signInWithGoogle } = useContext(AuthContext)
+    const navigate = useNavigate()
+    const location = useLocation()
     const [disable, setDisable] = useState(true)
+    const from = location.state?.from?.pathname || '/'
 
-    useEffect(()=> {
+    useEffect(() => {
         loadCaptchaEnginge(6);
     }, [])
 
-    const handleLogin = (e)=> {
+    const handleLogin = (e) => {
         e.preventDefault();
         const form = e.target
         const email = form.email.value;
         const password = form.password.value;
         console.log(email, password);
         signIn(email, password)
-        .then(result => {
-            console.log(result.user)
-        })
+            .then(result => {
+                console.log(result.user)
+                navigate(from, {replace: true})
+            })
     }
 
-    const handleCaptcha = ()=> {
-        const user_captcha_value = captchaRef.current.value;
-        if(validateCaptcha(user_captcha_value)){
+    const handleCaptcha = (e) => {
+        const user_captcha_value = e.target.value;
+        if (validateCaptcha(user_captcha_value)) {
             setDisable(false)
         }
-        else{
+        else {
             setDisable(true)
         }
     }
 
-    const handleGoogleLogin = ()=> {
-
+    const handleGoogleLogin = () => {
+        signInWithGoogle()
+            .then(result => {
+                // toast.success('Signin Successful')
+                navigate(from, {replace: true})
+            })
+            .catch(error => {
+                // toast.error(error?.message)
+                console.log(error?.message)
+            })
     }
     return (
         <div>
@@ -66,9 +77,8 @@ const Login = () => {
                         </div>
                         <div className="mt-4">
                             <LoadCanvasTemplate />
-                            <input type="text" ref={captchaRef} name="captcha" placeholder="type the text avobe"
+                            <input onBlur={handleCaptcha} type="text" name="captcha" placeholder="type the text avobe"
                                 className="px-4 py-2 rounded-lg w-full border border-blue-300" />
-                                <button onClick={handleCaptcha} className="btn btn-outline btn-xs w-full mt-2">Validate</button>
                         </div>
                         <div>
                             <input disabled={disable} type="submit" value="Login" className="btn btn-primary w-full mt-6" />

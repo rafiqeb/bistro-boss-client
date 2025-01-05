@@ -7,6 +7,8 @@ import Menu from "../pages/menu/Menu";
 import OrderFood from "../pages/orderFood/OrderFood";
 import Login from "../aouthentication/Login";
 import Register from "../aouthentication/Register";
+import PrivateRoute from "../aouthentication/PrivateRoute";
+import Secret from "../pages/Secret";
 
 
  export const router = createBrowserRouter([
@@ -25,6 +27,10 @@ import Register from "../aouthentication/Register";
         {
           path: 'order/:category',
           element: <OrderFood></OrderFood>
+        },
+        {
+          path: 'secret',
+          element: <PrivateRoute><Secret></Secret></PrivateRoute>
         }
       ]
     },

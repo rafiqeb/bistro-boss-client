@@ -1,20 +1,31 @@
 import { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../aouthentication/AouthProvider";
+import { FaUserCircle } from "react-icons/fa";
+import { GrCart } from "react-icons/gr";
+import useCart from "../hooks/useCart";
 
 
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext)
+    const [cart] = useCart();
 
     const links = <>
         <li><NavLink to='/'>Home</NavLink></li>
         <li><NavLink to='/menu'>Our menu</NavLink></li>
         <li><NavLink to='/order/salad'>Order Food</NavLink></li>
+        <li><NavLink to='/secret'>Secret</NavLink></li>
+        <li><Link>
+            <button className="flex items-center gap-2">
+                <GrCart />
+                <div className="badge badge-secondary">+{cart.length}</div>
+            </button>
+        </Link></li>
         {
             user ? <>
-                <li onClick={logOut}><NavLink>Log out</NavLink></li>
+                <li onClick={logOut}><Link>Log out</Link></li>
             </> : <>
-                <li><NavLink to='/login'>Login</NavLink></li>
+                <li><Link to='/login'>Login</Link></li>
             </>
         }
     </>
@@ -51,7 +62,8 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <a className="btn">Button</a>
+                    {user && user?.photoURL ? (<img
+                        referrerPolicy="no-referrer" className="w-[40px] h-[40px] rounded-full" src={user.photoURL} alt="" />) : (<p className="text-4xl"><FaUserCircle /></p>)}
                 </div>
             </div>
         </div>
