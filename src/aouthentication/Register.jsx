@@ -2,31 +2,43 @@ import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AouthProvider";
+import axios from "axios";
+import Swal from 'sweetalert2'
 
 
 const Register = () => {
     const { creatUser, updateUserProfile, setUser } = useContext(AuthContext)
     const navigate = useNavigate()
 
-    const handleRegister = async(e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
         const form = e.target
         const name = form.name.value;
         const email = form.email.value;
         const photo = form.photo.value;
         const password = form.password.value;
-        console.log(name, email, photo, password);
+        // console.log(name, email, photo, password);
         try {
             const result = await creatUser(email, password)
             await updateUserProfile(name, photo)
-            setUser({ ...result.user, photoURL: photo, displayName: name })
-            // Swal.fire({
-            //     title: 'Success!',
-            //     text: 'Registration successfully',
-            //     icon: 'success',
-            //     confirmButtonText: 'Ok'
-            // })
-            navigate('/')
+            // setUser({ ...result.user, photoURL: photo, displayName: name })
+            const userInfo = {
+                userName: name,
+                userEmail: email,
+            }
+            axios.post('http://localhost:5000/users', userInfo)
+                .then(res => {
+                    if (res.data.insertedId) {
+                        form.reset()
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Registration successfully',
+                            icon: 'success',
+                            confirmButtonText: 'Ok'
+                        })
+                        navigate('/')
+                    }
+                })
         } catch (error) {
             // toast.error(error?.message)
             console.log(error.message)

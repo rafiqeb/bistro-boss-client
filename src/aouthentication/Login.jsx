@@ -4,6 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AouthProvider";
+import axios from "axios";
 
 
 const Login = () => {
@@ -44,7 +45,14 @@ const Login = () => {
         signInWithGoogle()
             .then(result => {
                 // toast.success('Signin Successful')
-                navigate(from, {replace: true})
+                const userInfo = {
+                    userName: result.user?.displayName,
+                    userEmail: result.user?.email,
+                }
+                axios.post('http://localhost:5000/users', userInfo)
+                .then(res => {
+                    navigate(from, {replace: true})
+                })
             })
             .catch(error => {
                 // toast.error(error?.message)
