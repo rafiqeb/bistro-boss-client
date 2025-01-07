@@ -4,10 +4,11 @@ import { FcGoogle } from "react-icons/fc";
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AouthProvider";
-import axios from "axios";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 
 const Login = () => {
+    const axiosSecure = useAxiosSecure()
     const { signIn, signInWithGoogle } = useContext(AuthContext)
     const navigate = useNavigate()
     const location = useLocation()
@@ -49,7 +50,7 @@ const Login = () => {
                     userName: result.user?.displayName,
                     userEmail: result.user?.email,
                 }
-                axios.post('http://localhost:5000/users', userInfo)
+                axiosSecure.post('/users', userInfo)
                 .then(res => {
                     navigate(from, {replace: true})
                 })

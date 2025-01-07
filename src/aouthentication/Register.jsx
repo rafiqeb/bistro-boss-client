@@ -2,11 +2,12 @@ import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AouthProvider";
-import axios from "axios";
 import Swal from 'sweetalert2'
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 
 const Register = () => {
+    const axiosSecure = useAxiosSecure()
     const { creatUser, updateUserProfile, setUser } = useContext(AuthContext)
     const navigate = useNavigate()
 
@@ -26,7 +27,7 @@ const Register = () => {
                 userName: name,
                 userEmail: email,
             }
-            axios.post('http://localhost:5000/users', userInfo)
+            axiosSecure.post('/users', userInfo)
                 .then(res => {
                     if (res.data.insertedId) {
                         form.reset()
