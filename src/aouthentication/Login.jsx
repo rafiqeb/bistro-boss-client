@@ -24,7 +24,6 @@ const Login = () => {
         const form = e.target
         const email = form.email.value;
         const password = form.password.value;
-        console.log(email, password);
         signIn(email, password)
             .then(result => {
                 console.log(result.user)
@@ -47,8 +46,8 @@ const Login = () => {
             .then(result => {
                 // toast.success('Signin Successful')
                 const userInfo = {
-                    userName: result.user?.displayName,
-                    userEmail: result.user?.email,
+                    name: result.user?.displayName,
+                    email: result.user?.email,
                 }
                 axiosSecure.post('/users', userInfo)
                 .then(res => {

@@ -2,11 +2,12 @@ import { NavLink, Outlet } from "react-router-dom";
 import { GrCart } from "react-icons/gr";
 import { FaBook, FaCalculator, FaCalendar, FaHome, FaList, FaPhone, FaSearch, FaStar, FaUser, FaUtensils } from "react-icons/fa";
 import useCart from "../hooks/useCart";
+import useAdmin from "../hooks/useAdmin";
 
 
 const DashBoard = () => {
     const [cart] = useCart();
-    const isAdmin = true;
+    const [isAdmin] = useAdmin();
 
     return (
         <div className="max-w-7xl mx-auto">

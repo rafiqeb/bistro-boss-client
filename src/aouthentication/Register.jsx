@@ -18,14 +18,14 @@ const Register = () => {
         const email = form.email.value;
         const photo = form.photo.value;
         const password = form.password.value;
-        // console.log(name, email, photo, password);
+        
         try {
             const result = await creatUser(email, password)
             await updateUserProfile(name, photo)
             // setUser({ ...result.user, photoURL: photo, displayName: name })
             const userInfo = {
-                userName: name,
-                userEmail: email,
+                name: name,
+                email: email,
             }
             axiosSecure.post('/users', userInfo)
                 .then(res => {
