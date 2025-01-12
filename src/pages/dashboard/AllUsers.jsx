@@ -57,6 +57,7 @@ const AllUsers = () => {
             }
         });
     }
+    
     return (
         <div>
             <div className="flex justify-evenly mb-6">
